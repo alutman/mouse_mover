@@ -7,10 +7,12 @@ public class MouseMover implements Runnable{
 
     private int timeout;
     private int moveRange;
+    private AppFrame appFrame;
 
-    public MouseMover(int timeout, int moveRange) {
+    public MouseMover(int timeout, int moveRange, AppFrame appFrame) {
         this.timeout = timeout;
         this.moveRange = moveRange;
+        this.appFrame = appFrame;
     }
 
     @Override
@@ -31,11 +33,16 @@ public class MouseMover implements Runnable{
                 }
             }
         } catch(AWTException awte) {
+            //Occurs when the OS doesn't support Robot
             awte.printStackTrace();
             System.exit(1);
+        } catch (NullPointerException npe) {
+            //Probably couldn't get the location (locked), show that the thread has stopped in the GUI
+            appFrame.showStopped();
         }
         catch (InterruptedException e) {
-            //LOL i dont care
+            //This is thrown when the user chooses to stop
+            appFrame.showStopped();
         }
 
     }

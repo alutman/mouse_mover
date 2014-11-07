@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 public class AppFrame extends JFrame implements ActionListener{
 
     private final int MIN_TIMEOUT = 100;
-    private final int DEFAULT_TIMEOUT = 300000;
+    private final int DEFAULT_TIMEOUT = 60000;
     private final int MAX_TIMEOUT = 3600000;
     private final int MIN_MOVERANGE = 10;
     private final int DEFAULT_MOVERANGE = 100;
@@ -18,10 +18,10 @@ public class AppFrame extends JFrame implements ActionListener{
     private JTextField timeoutField = new JTextField(""+DEFAULT_TIMEOUT);
     private JTextField moveRangeField = new JTextField(""+DEFAULT_MOVERANGE);
     private JButton start = new JButton("Start");
-    private JLabel status = new JLabel("Stopped");
+    private JLabel status = new JLabel(" Stopped");
 
 
-    private Thread currentThread;
+    private Thread currentThread = new Thread();
 
     public AppFrame() {
         status.setFont(new Font("Monospaced", Font.PLAIN,14));
@@ -67,24 +67,33 @@ public class AppFrame extends JFrame implements ActionListener{
                 moveRange = Math.abs(Integer.parseInt(moveRangeField.getText()));
                 if(moveRange < MIN_MOVERANGE || moveRange > MAX_MOVERANGE) throw new Exception();
             } catch (Exception ex) {
-                status.setText("Invalid entry");
+                status.setText(" Invalid entry");
                 return;
             }
-            currentThread = new Thread(new MouseMover(timeout,moveRange));
+            currentThread = new Thread(new MouseMover(timeout,moveRange, this));
             currentThread.start();
-            start.setText("Stop");
-            start.setActionCommand("stop");
-            status.setText("Running");
+            showStarted();
         }
         else if(e.getActionCommand().equals("stop")) {
             currentThread.interrupt();
-            start.setText("Start");
-            start.setActionCommand("start");
-            status.setText("Stopped");
-
         }
     }
-
+    public void showStarted()
+    {
+        start.setText("Stop");
+        start.setActionCommand("stop");
+        status.setText(" Running");
+        timeoutField.setEditable(false);
+        moveRangeField.setEditable(false);
+        //timeoutField.setBackground(new Color(255,255,255));
+    }
+    public void showStopped() {
+        start.setText("Start");
+        start.setActionCommand("start");
+        status.setText(" Stopped");
+        timeoutField.setEditable(true);
+        moveRangeField.setEditable(true);
+    }
     public static void main(String[] args)  {
         new AppFrame();
     }
