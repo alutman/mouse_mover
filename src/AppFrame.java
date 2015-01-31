@@ -88,7 +88,7 @@ public class AppFrame extends JFrame {
 
     public void createTrayIcon(ActionListener al) {
         if(SystemTray.isSupported()) {
-            Image image = new ImageIcon(getClass().getClassLoader().getResource("image/mouse-pointer-16.gif")).getImage();
+            Image image = new ImageIcon(getClass().getClassLoader().getResource("image/mouse-pointer-64.png")).getImage();
             PopupMenu popup = new PopupMenu();
 
             MenuItem open = new MenuItem("Open");
@@ -113,7 +113,9 @@ public class AppFrame extends JFrame {
             exit.addActionListener(al);
             popup.add(exit);
 
-            trayIcon = new TrayIcon(image, "Mouse Mover", popup);
+            int trayIconWidth = new TrayIcon(image).getSize().width;
+
+            trayIcon = new TrayIcon(image.getScaledInstance(trayIconWidth, -1, Image.SCALE_SMOOTH), "Mouse Mover", popup);
             trayIcon.setActionCommand("restore");
             trayIcon.addActionListener(al);
         }
