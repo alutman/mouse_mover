@@ -21,11 +21,11 @@ public class ActionHandler implements ActionListener, WindowStateListener {
             int moveRange;
             try {
                 timeout = Math.abs(Integer.parseInt(appFrame.getTimeoutText())*1000);
-                if(timeout < MouseMover.MIN_TIMEOUT || timeout > MouseMover.MAX_TIMEOUT) throw new Exception();
+                if(timeout < MouseMover.MIN_TIMEOUT || timeout > MouseMover.MAX_TIMEOUT) throw new InvalidEntryException();
                 moveRange = Math.abs(Integer.parseInt(appFrame.getMoveRangeText()));
-                if(moveRange < MouseMover.MIN_MOVERANGE || moveRange > MouseMover.MAX_MOVERANGE) throw new Exception();
-            } catch (Exception ex) {
-                appFrame.setStatus(" Invalid entry");
+                if(moveRange < MouseMover.MIN_MOVERANGE || moveRange > MouseMover.MAX_MOVERANGE) throw new InvalidEntryException();
+            } catch (InvalidEntryException ex) {
+                appFrame.setStatus("Invalid entry");
                 return;
             }
             appFrame.startThread(new Thread(new MouseMover(timeout,moveRange)));

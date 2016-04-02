@@ -18,11 +18,12 @@ public class AppFrame extends JFrame {
     private Thread moverThread = new Thread();
 
     public AppFrame() {
-        status.setFont(new Font("Monospaced", Font.PLAIN,14));
-        timeoutField.setFont(new Font("Monospaced", Font.PLAIN,14));
-        moveRangeField.setFont(new Font("Monospaced", Font.PLAIN,14));
 
-        this.setSize(250,120);
+        status.setFont(new Font("Monospaced", Font.PLAIN, DPIController.scaleToDPI(14)));
+        timeoutField.setFont(new Font("Monospaced", Font.PLAIN, DPIController.scaleToDPI(14)));
+        moveRangeField.setFont(new Font("Monospaced", Font.PLAIN, DPIController.scaleToDPI(14)));
+
+        this.setSize(DPIController.scaleToDPI(250),DPIController.scaleToDPI(120));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,7 +55,7 @@ public class AppFrame extends JFrame {
     }
 
     public void setStatus(String status) {
-        this.status.setText(status);
+        this.status.setText(" "+status);
     }
 
     public String getTimeoutText() {
@@ -92,23 +93,26 @@ public class AppFrame extends JFrame {
             PopupMenu popup = new PopupMenu();
 
             MenuItem open = new MenuItem("Open");
-            open.setFont(new Font("default", Font.BOLD, 12));
+            open.setFont(new Font("default", Font.BOLD, DPIController.scaleToDPI(12)));
             open.setActionCommand("restore");
             open.addActionListener(al);
             popup.add(open);
 
             MenuItem start = new MenuItem("Start");
+            start.setFont(new Font("default", Font.PLAIN, DPIController.scaleToDPI(12)));
             start.setActionCommand("start");
             start.addActionListener(al);
             popup.add(start);
 
             MenuItem stop = new MenuItem("Stop");
+            stop.setFont(new Font("default", Font.PLAIN, DPIController.scaleToDPI(12)));
             stop.setActionCommand("stop");
             stop.addActionListener(al);
             popup.add(stop);
 
 
             MenuItem exit = new MenuItem("Exit");
+            exit.setFont(new Font("default", Font.PLAIN, DPIController.scaleToDPI(12)));
             exit.setActionCommand("exit");
             exit.addActionListener(al);
             popup.add(exit);
@@ -138,7 +142,7 @@ public class AppFrame extends JFrame {
         }
         start.setText("Stop");
         start.setActionCommand("stop");
-        status.setText(" Running");
+        setStatus("Running");
         timeoutField.setEditable(false);
         moveRangeField.setEditable(false);
     }
@@ -157,12 +161,13 @@ public class AppFrame extends JFrame {
         }
         start.setText("Start");
         start.setActionCommand("start");
-        status.setText(" Stopped");
+        setStatus("Stopped");
         timeoutField.setEditable(true);
         moveRangeField.setEditable(true);
     }
 
     public static void main(String[] args)  {
+        DPIController.scaleFontsToDPI();
         new AppFrame();
     }
 
