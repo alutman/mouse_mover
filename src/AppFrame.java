@@ -7,6 +7,8 @@ import java.awt.event.*;
  */
 public class AppFrame extends JFrame {
 
+    private static final String VERSION = "1.2";
+
     private JTextField timeoutField = new JTextField(""+MouseMover.DEFAULT_TIMEOUT/1000);
     private JTextField moveRangeField = new JTextField(""+MouseMover.DEFAULT_MOVERANGE);
     private JButton start = new JButton("Start");
@@ -41,6 +43,8 @@ public class AppFrame extends JFrame {
         this.add(moveRangeLabel);
         this.add(moveRangeField);
         this.add(start);
+
+        status.setToolTipText("Mouse Mover v"+VERSION);
         this.add(status);
 
         ActionHandler ah = new ActionHandler(this);
