@@ -7,12 +7,15 @@ import java.awt.event.*;
  */
 public class AppFrame extends JFrame {
 
-    private static final String VERSION = "1.2";
+    private static final String VERSION = "1.3";
 
-    private JTextField timeoutField = new JTextField(""+MouseMover.DEFAULT_TIMEOUT/1000);
-    private JTextField moveRangeField = new JTextField(""+MouseMover.DEFAULT_MOVERANGE);
+    private JTextField timeoutField = new JTextField(""+ MouseMover.DEFAULT_TIMEOUT/1000);
+    private JTextField moveRangeField = new JTextField(""+ MouseMover.DEFAULT_MOVERANGE);
     private JButton start = new JButton("Start");
     private JLabel status = new JLabel(" Stopped");
+
+    private JCheckBox anchor = new JCheckBox("Anchor", true);
+    private JCheckBox click = new JCheckBox("Click", false);
 
     private TrayIcon trayIcon;
 
@@ -33,15 +36,24 @@ public class AppFrame extends JFrame {
         this.setTitle("Mouse Mover");
         this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/mouse-pointer-64.png")).getImage());
 
-        this.setLayout(new GridLayout(3,2));
+        this.setLayout(new GridLayout(4,2));
 
         JLabel timeoutLabel = new JLabel("Timeout (s)");
+        timeoutLabel.setToolTipText("Delay in seconds between each move");
         this.add(timeoutLabel);
         this.add(timeoutField);
 
         JLabel moveRangeLabel = new JLabel("Move Range (px)");
+        moveRangeLabel.setToolTipText("Range in pixels for the cursor to move");
         this.add(moveRangeLabel);
         this.add(moveRangeField);
+
+        anchor.setToolTipText("Anchor mouse to initial position");
+        this.add(anchor);
+
+        click.setToolTipText("Click left mouse button after each move");
+        this.add(click);
+
         this.add(start);
 
         status.setToolTipText("Mouse Mover v"+VERSION);
@@ -59,6 +71,12 @@ public class AppFrame extends JFrame {
     }
 
     public void setStatus(String status) {
+        this.status.setToolTipText("Mouse Mover v"+VERSION);
+        this.status.setText(" "+status);
+    }
+
+    public void setStatus(String status, String tooltip) {
+        this.status.setToolTipText(tooltip);
         this.status.setText(" "+status);
     }
 
@@ -68,6 +86,15 @@ public class AppFrame extends JFrame {
     public String getMoveRangeText() {
         return moveRangeField.getText();
     }
+
+    public boolean isAnchorChecked() {
+        return anchor.isSelected();
+    }
+
+    public boolean isClickChecked() {
+        return click.isSelected();
+    }
+
     public void exit() {
         System.exit(0);
     }
@@ -149,6 +176,8 @@ public class AppFrame extends JFrame {
         setStatus("Running");
         timeoutField.setEditable(false);
         moveRangeField.setEditable(false);
+        anchor.setEnabled(false);
+        click.setEnabled(false);
     }
 
     public void stopThread() {
@@ -168,6 +197,8 @@ public class AppFrame extends JFrame {
         setStatus("Stopped");
         timeoutField.setEditable(true);
         moveRangeField.setEditable(true);
+        anchor.setEnabled(true);
+        click.setEnabled(true);
     }
 
     public static void main(String[] args)  {

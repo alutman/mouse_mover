@@ -16,29 +16,31 @@ public class ActionHandler implements ActionListener, WindowStateListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("start")) {
-            int timeout;
-            int moveRange;
-            try {
-                timeout = Math.abs(Integer.parseInt(appFrame.getTimeoutText())*1000);
-                if(timeout < MouseMover.MIN_TIMEOUT || timeout > MouseMover.MAX_TIMEOUT) throw new InvalidEntryException();
-                moveRange = Math.abs(Integer.parseInt(appFrame.getMoveRangeText()));
-                if(moveRange < MouseMover.MIN_MOVERANGE || moveRange > MouseMover.MAX_MOVERANGE) throw new InvalidEntryException();
-            } catch (InvalidEntryException ex) {
-                appFrame.setStatus("Invalid entry");
-                return;
-            }
-            appFrame.startThread(new Thread(new MouseMover(timeout,moveRange)));
+        switch (e.getActionCommand()) {
+            case "start":
+                MouseMover mc;
+                try {
+                    double timeoutSeconds = Math.abs(Double.parseDouble(appFrame.getTimeoutText()));
+                    int timeout = (int)(timeoutSeconds * 1000d);
 
-        }
-        else if(e.getActionCommand().equals("stop")) {
-            appFrame.stopThread();
-        }
-        else if(e.getActionCommand().equals("exit")) {
-            appFrame.exit();
-        }
-        else if(e.getActionCommand().equals("restore")) {
-            appFrame.restore();
+                    int moveRange = Math.abs(Integer.parseInt(appFrame.getMoveRangeText()));
+                    mc = new MouseMover(timeout, moveRange, appFrame.isAnchorChecked(), appFrame.isClickChecked());
+                } catch (IllegalArgumentException ex) {
+                    appFrame.setStatus("invalid entry", ex.getMessage());
+                    return;
+                }
+                appFrame.startThread(new Thread(mc));
+
+                break;
+            case "stop":
+                appFrame.stopThread();
+                break;
+            case "exit":
+                appFrame.exit();
+                break;
+            case "restore":
+                appFrame.restore();
+                break;
         }
     }
 
